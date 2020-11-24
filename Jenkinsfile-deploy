@@ -1,12 +1,21 @@
 pipeline {
   agent any
   stages {
+    stage('Prepare inventory') {
+      steps{
+        script {
+          sh """/bin/bash
+            echo -e "[node]\n$NODE_IP" > ansible/inventory.ini;
+          """
+        }
+      }
+    }
     stage('Run playbook') {
       steps{
         withCredentials([usernamePassword(credentialsId: 'nikitasp1992_dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
           ansiblePlaybook(
             playbook: 'ansible/prepare.yml',
-            inventory: "${NODE_IP}",
+            inventory: 'ansible/inventory.ini',
             credentialsId: 'jenkins_main',
             limit: 'node',
             extraVars: [

@@ -29,8 +29,8 @@
     
     - name: Log into DockerHub
       community.general.docker_login:
-        username: {{DOCKERHUB_USER}}
-        password: {{DOCKERHUB_PASSWORD}}
+        username: "{{DOCKERHUB_USER}}"
+        password: "{{DOCKERHUB_PASSWORD}}"
 
     #- name: Run service
     #  community.general.docker_swarm_service:
