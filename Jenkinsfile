@@ -29,9 +29,21 @@ pipeline {
     }
     stage('Start deploy from registry to node') {
       steps {
-        build(job: 'Prepare node and deploy', parameters: [
-            string(name: 'DOCKER_IMAGE', value: dockerImage),
-            string(name: 'NODE_IP', value: "${NODE_IP}")
+        build(
+          job: 'Prepare node and deploy',
+          parameters: [
+            //string(name: 'DOCKER_IMAGE', value: dockerImage),
+            //string(name: 'NODE_IP', value: "${NODE_IP}")
+            [
+              $class: 'StringParameterValue',
+              name: 'DOCKER_IMAGE',
+              value: dockerImage,
+            ],
+            [
+              $class: 'StringParameterValue',
+              name: 'NODE_IP',
+              value: "${NODE_IP}",
+            ],
           ]
         )
       }
