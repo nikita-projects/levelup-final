@@ -1,0 +1,29 @@
+ipeline {
+  stages {
+    stage('Prepare inventory') {
+      steps{
+        script {
+          sh """/bin/bash
+            echo -e "[node]\n$NODE_IP" > ansible/inventory.ini;
+          """
+        }
+      }
+    }
+    stage('Run playbook') {
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'nikitasp1992_dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+          ansiblePlaybook(
+            playbook: 'ansible/prepare.yml',
+            inventory: 'ansible/inventory.ini',
+            credentialsId: 'jenkins_main',
+            extraVars: [
+              DOCKERHUB_USER: $DOCKERHUB_USER,
+              DOCKERHUB_PASSWORD: [value: $DOCKERHUB_PASSWORD, hidden: true],
+              DOCKER_IMAGE: $DOCKER_IMAGE
+            ]
+          )
+        }
+      }
+    }
+  }
+}

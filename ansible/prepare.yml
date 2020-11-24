@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3', 'python3-pip', 'virtualenv', 'python3-setuptools', 'python-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker.io state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+    
+    - name: Log into DockerHub
+      community.general.docker_login:
+        username: {{DOCKERHUB_USER}}
+        password: {{DOCKERHUB_PASSWORD}}
+
+    #- name: Run service
+    #  community.general.docker_swarm_service:
+    #    name: final
+    #    image: {{DOCKER_IMAGE}}
+    #    replicas: 1
+    #    args:
+    #      - "3600"
