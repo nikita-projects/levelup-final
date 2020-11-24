@@ -22,9 +22,10 @@ pipeline {
       steps { 
         script { 
           docker.withRegistry( '', registryCredential ) { 
-          dockerImage.push() 
-        }
-      } 
+            dockerImage.push() 
+          }
+        } 
+      }
     }
     stage('Start deploy from registry to node') {
       build job: 'Prepare node and deploy', parameters: [
