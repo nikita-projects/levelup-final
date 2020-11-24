@@ -1,4 +1,5 @@
 ipeline {
+  agent any
   stages {
     stage('Prepare inventory') {
       steps{

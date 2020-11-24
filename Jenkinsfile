@@ -28,6 +28,8 @@ pipeline {
       }
     }
     stage('Start deploy from registry to node') {
+      agent any
+
       steps {
         build(job: 'Prepare node and deploy', parameters: [
             string(name: 'DOCKER_IMAGE', value: dockerImage),
