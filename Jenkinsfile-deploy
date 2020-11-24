@@ -19,7 +19,7 @@ pipeline {
             credentialsId: 'jenkins_main',
             extraVars: [
               DOCKERHUB_USER: "${DOCKERHUB_USER}",
-              DOCKERHUB_PASSWORD: [value: "${DOCKERHUB_PASSWORD}", hidden: true],
+              DOCKERHUB_PASSWORD: "${DOCKERHUB_PASSWORD}",
               BUILD_NUMBER: "${BUILD_NUMBER}"
             ]
           )
