@@ -32,12 +32,12 @@ pipeline {
         build(
           job: 'Prepare node and deploy',
           parameters: [
-            //string(name: 'DOCKER_IMAGE', value: dockerImage),
+            //string(name: 'BUILD_NUMBER', value: dockerImage),
             //string(name: 'NODE_IP', value: "${NODE_IP}")
             [
               $class: 'StringParameterValue',
-              name: 'DOCKER_IMAGE',
-              value: dockerImage,
+              name: 'BUILD_NUMBER',
+              value: "${BUILD_NUMBER}",
             ],
             [
               $class: 'StringParameterValue',

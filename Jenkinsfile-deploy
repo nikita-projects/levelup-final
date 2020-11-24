@@ -20,7 +20,7 @@ ipeline {
             extraVars: [
               DOCKERHUB_USER: "${DOCKERHUB_USER}",
               DOCKERHUB_PASSWORD: [value: "${DOCKERHUB_PASSWORD}", hidden: true],
-              DOCKER_IMAGE: "${DOCKER_IMAGE}"
+              BUILD_NUMBER: "${BUILD_NUMBER}"
             ]
           )
         }
