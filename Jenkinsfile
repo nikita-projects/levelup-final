@@ -28,11 +28,13 @@ pipeline {
       }
     }
     stage('Start deploy from registry to node') {
-      build(job: 'Prepare node and deploy', parameters: [
-          string(name: 'DOCKER_IMAGE', value: dockerImage),
-          string(name: 'NODE_IP', value: "${NODE_IP}")
-        ]
-      )
+      steps {
+        build(job: 'Prepare node and deploy', parameters: [
+            string(name: 'DOCKER_IMAGE', value: dockerImage),
+            string(name: 'NODE_IP', value: "${NODE_IP}")
+          ]
+        )
+      }
     }
     stage('Cleaning up') { 
       steps { 
