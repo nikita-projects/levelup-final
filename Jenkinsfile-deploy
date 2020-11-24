@@ -17,6 +17,7 @@ pipeline {
             playbook: 'ansible/prepare.yml',
             inventory: 'ansible/inventory.ini',
             credentialsId: 'jenkins_main',
+            limit: 'node',
             extraVars: [
               DOCKERHUB_USER: "${DOCKERHUB_USER}",
               DOCKERHUB_PASSWORD: "${DOCKERHUB_PASSWORD}",
