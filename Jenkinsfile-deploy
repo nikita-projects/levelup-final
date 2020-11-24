@@ -17,9 +17,9 @@ ipeline {
             inventory: 'ansible/inventory.ini',
             credentialsId: 'jenkins_main',
             extraVars: [
-              DOCKERHUB_USER: params.DOCKERHUB_USER,
-              DOCKERHUB_PASSWORD: [value: params.DOCKERHUB_PASSWORD, hidden: true],
-              DOCKER_IMAGE: params.DOCKER_IMAGE
+              DOCKERHUB_USER: "${DOCKERHUB_USER}",
+              DOCKERHUB_PASSWORD: [value: "${DOCKERHUB_PASSWORD}", hidden: true],
+              DOCKER_IMAGE: "${DOCKER_IMAGE}"
             ]
           )
         }
