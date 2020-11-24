@@ -1,7 +1,7 @@
 pipeline {
   environment { 
-      registry = $REGISTRY 
-      registryCredential = $REGISTRY_CREDENTIALS 
+      registry = params.REGISTRY 
+      registryCredential = params.REGISTRY_CREDENTIALS 
       dockerImage = '' 
     }
   agent { dockerfile true }
@@ -30,7 +30,7 @@ pipeline {
     stage('Start deploy from registry to node') {
       build job: 'Prepare node and deploy', parameters: [
           string(name: 'DOCKER_IMAGE', value: dockerImage),
-          string(name: 'NODE_IP', value: NODE_IP)
+          string(name: 'NODE_IP', value: params.NODE_IP)
         ]
     }
     stage('Cleaning up') { 
