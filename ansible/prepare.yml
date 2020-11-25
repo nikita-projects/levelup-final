@@ -23,7 +23,7 @@
       apt: update_cache=yes name=docker-ce state=latest
 
     - name: Install Docker Module for Python
-      pip3:
+      pip:
         name: docker
     
     - name: Log into DockerHub
