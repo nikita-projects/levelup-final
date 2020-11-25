@@ -39,3 +39,37 @@
     #    replicas: 1
     #    args:
     #      - "3600"
+
+    - name: Create namespace final
+      k8s:
+        name: final
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Deploy image
+      k8s:
+        api_version: v1
+        namespace: final
+        definition:
+          kind: Deployment
+          metadata:
+            labels:
+              app: tomcat
+            name: tomcat-deploy
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: tomcat
+            template:
+              metadata:
+                labels:
+                  app: tomcat
+              spec:
+                containers:
+                  - name: my-webserver
+                    image: nikitasp1992/main:"{{DOCKER_IMAGE}}"
+                    ports:
+                      - containerPort: 80
+                        protocol: TCP
