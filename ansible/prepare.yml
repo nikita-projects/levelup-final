@@ -24,7 +24,8 @@
 
     - name: Install Docker Module for Python
       pip:
-        name: docker
+        name: "{{ item }}"
+      loop: [ 'kubernetes', 'docker' ]
     
     - name: Log into DockerHub
       community.general.docker_login:
