@@ -43,7 +43,7 @@
         mode: '0644'
 
     - name: Activate ingress
-      remote_user: jenkins
+      become: no
       shell:
         cmd: minikube addons enable ingress
 
@@ -63,16 +63,16 @@
     #    state: present
 
     - name: Create deploy
-      remote_user: jenkins
+      become: no
       shell:
         cmd: kubectl create deployment final --image=nikitasp1992/main:"{{DOCKER_IMAGE}}"
 
     - name: Expose deploy
-      remote_user: jenkins
+      become: no
       shell:
         cmd: kubectl expose deployment final --type=NodePort --port=8080
 
     - name: Apply ingress
-      remote_user: jenkins
+      become: no
       shell:
         cmd: kubectl apply -f /tmp/k8s.yml
