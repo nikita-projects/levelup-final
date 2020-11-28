@@ -37,8 +37,8 @@
       copy:
         src: k8s.yml
         dest: /tmp/k8s.yml
-        owner: docker
-        group: docker
+        owner: root
+        group: root
         mode: '0644'
 
     - name: Activate ingress
