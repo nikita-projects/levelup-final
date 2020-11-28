@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: final
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: final
+    spec:
+      containers:
+      - image: "nikitasp1992/main:{{BUILD_NUMBER}}"
+        name: final
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Always

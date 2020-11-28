@@ -50,13 +50,14 @@
         cmd: kubectl patch serviceaccount default -p "{{ json_data }}"
       ignore_errors: yes
 
-    - name: Copy ingress config
+    - name: Copy configs
       copy:
-        src: ingress.j2
-        dest: /tmp/ingress.yml
+        src: "{{ item}}".j2
+        dest: /tmp/"{{ item }}".yml
         owner: root
         group: root
         mode: '0644'
+      loop: [ 'ingress', 'deploy', 'service' ]
 
     - name: Activate ingress
       become: no
@@ -78,17 +79,12 @@
     #    kind: Namespace
     #    state: present
 
-    - name: Create deploy
+    #- name: Create deploy
+    #  become: no
+    #  shell:
+    #    cmd: kubectl create deployment final --image=nikitasp1992/main:"{{BUILD_NUMBER}}"
+    - name: Apply configs
       become: no
       shell:
-        cmd: kubectl create deployment final --image=nikitasp1992/main:"{{BUILD_NUMBER}}"
-
-    - name: Expose deploy
-      become: no
-      shell:
-        cmd: kubectl expose deployment final --type=NodePort --port=8080
-
-    - name: Apply ingress
-      become: no
-      shell:
-        cmd: kubectl apply -f /tmp/ingress.yml
+        cmd: kubectl apply -f /tmp/"{{ item }}".yml
+      loop: [ 'ingress', 'deploy', 'service' ]
