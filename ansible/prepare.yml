@@ -36,8 +36,8 @@
     
     - name: Copy ingress config
       copy:
-        src: k8s.yml
-        dest: /tmp/k8s.yml
+        src: ingress.j2
+        dest: /tmp/ingress.yml
         owner: root
         group: root
         mode: '0644'
@@ -65,7 +65,7 @@
     - name: Create deploy
       become: no
       shell:
-        cmd: kubectl create deployment final --image=nikitasp1992/main:"{{DOCKER_IMAGE}}"
+        cmd: kubectl create deployment final --image=nikitasp1992/main:"{{BUILD_NUMBER}}"
 
     - name: Expose deploy
       become: no
@@ -75,4 +75,4 @@
     - name: Apply ingress
       become: no
       shell:
-        cmd: kubectl apply -f /tmp/k8s.yml
+        cmd: kubectl apply -f /tmp/ingress.yml
