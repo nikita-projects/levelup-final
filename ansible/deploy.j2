@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: final
-  namespace: default
+  labels:
+    app: final
 spec:
   replicas: 1
   selector:
@@ -16,5 +17,6 @@ spec:
       containers:
       - image: "nikitasp1992/main:{{BUILD_NUMBER}}"
         name: final
-        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
       restartPolicy: Always
