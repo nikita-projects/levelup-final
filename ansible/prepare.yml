@@ -51,7 +51,7 @@
       ignore_errors: yes
 
     - name: Copy configs
-      copy:
+      template:
         src: "{{ item }}.j2"
         dest: "/tmp/{{ item }}.yml"
         owner: root
