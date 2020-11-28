@@ -87,4 +87,9 @@
       become: no
       shell:
         cmd: "kubectl apply -f /tmp/{{ item }}.yml"
-      loop: [ 'ingress', 'deploy', 'service' ]
+      loop: [ 'deploy', 'service' ]
+
+    - name: Apply ingress configs
+      become: no
+      shell:
+        cmd: "kubectl apply -f /tmp/ingress.yml"
