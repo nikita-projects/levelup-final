@@ -25,12 +25,25 @@
     - name: Install Docker Module for Python
       pip:
         name: "{{ item }}"
-      loop: [ 'kubernetes', 'docker', 'openshift' ]
+      #loop: [ 'kubernetes', 'docker', 'openshift' ]
+      loop: [ 'docker' ]
     
     - name: Log into DockerHub
       community.general.docker_login:
         username: "{{DOCKERHUB_USER}}"
         password: "{{DOCKERHUB_PASSWORD}}"
+    
+    - name: Copy ingress config
+      copy:
+        src: k8s.yml
+        dest: /tmp/k8s.yml
+        owner: docker
+        group: docker
+        mode: '0644'
+
+    - name: Activate ingress
+      shell:
+        cmd: minikube addons enable ingress
 
     #- name: Run service
     #  community.general.docker_swarm_service:
@@ -40,36 +53,21 @@
     #    args:
     #      - "3600"
 
-    - name: Create namespace final
-      k8s:
-        name: final
-        api_version: v1
-        kind: Namespace
-        state: present
+    #- name: Create namespace final
+    #  k8s:
+    #    name: final
+    #    api_version: v1
+    #    kind: Namespace
+    #    state: present
 
-    - name: Deploy image
-      k8s:
-        api_version: v1
-        namespace: final
-        definition:
-          kind: Deployment
-          metadata:
-            labels:
-              app: tomcat
-            name: tomcat-deploy
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: tomcat
-            template:
-              metadata:
-                labels:
-                  app: tomcat
-              spec:
-                containers:
-                  - name: my-webserver
-                    image: nikitasp1992/main:"{{DOCKER_IMAGE}}"
-                    ports:
-                      - containerPort: 80
-                        protocol: TCP
+    - name: Create deploy
+      shell:
+        cmd: kubectl create deployment final --image=nikitasp1992/main:"{{DOCKER_IMAGE}}"
+
+    - name: Expose deploy
+      shell:
+        cmd: kubectl expose deployment final --type=NodePort --port=8080
+
+    - name: Apply ingress
+      shell:
+        cmd: kubectl apply -f /tmp/k8s.yml
