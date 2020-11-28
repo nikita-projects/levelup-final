@@ -15,7 +15,6 @@ pipeline {
       steps { 
         script { 
           dockerImage = docker.build("$REGISTRY", "--no-cache .")
-          dockerImage.push("$BUILD_NUMBER")
         }
       } 
     }
@@ -23,7 +22,7 @@ pipeline {
       steps { 
         script { 
           docker.withRegistry( '', registryCredential ) { 
-            dockerImage.push() 
+            dockerImage.push("$BUILD_NUMBER") 
           }
         } 
       }
