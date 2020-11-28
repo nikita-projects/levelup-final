@@ -52,8 +52,8 @@
 
     - name: Copy configs
       copy:
-        src: "{{ item}}".j2
-        dest: /tmp/"{{ item }}".yml
+        src: "{{ item }}.j2"
+        dest: "/tmp/{{ item }}.yml"
         owner: root
         group: root
         mode: '0644'
@@ -86,5 +86,5 @@
     - name: Apply configs
       become: no
       shell:
-        cmd: kubectl apply -f /tmp/"{{ item }}".yml
+        cmd: "kubectl apply -f /tmp/{{ item }}.yml"
       loop: [ 'ingress', 'deploy', 'service' ]
