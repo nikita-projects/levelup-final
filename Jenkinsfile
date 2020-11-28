@@ -14,7 +14,7 @@ pipeline {
     stage('Building our image') { 
       steps { 
         script { 
-          dockerImage = docker.build("$REGISTRY:$BUILD_NUMBER", "--no-cache")
+          dockerImage = docker.build("-t $BUILD_NUMBER", "$REGISTRY", "--no-cache")
         }
       } 
     }
