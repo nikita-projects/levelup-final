@@ -38,6 +38,7 @@
       become: no
       shell:
         cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}" --docker-email=nikitasp1992@gmail.com
+      ignore_errors: yes
 
     - name: Register JSON data
       set_fact:
@@ -47,6 +48,7 @@
       become: no
       shell:
         cmd: kubectl patch serviceaccount default -p "{{ json_data }}"
+      ignore_errors: yes
 
     - name: Copy ingress config
       copy:
