@@ -39,11 +39,15 @@
       shell:
         cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}"
 
+    - name: Register JSON data
+      set_fact:
+        json_data: '{"imagePullSecrets": [{"name": "myregistrykey"}]}'
+
     - name: Log into DockerHub
       become: no
       shell:
-        cmd: 'kubectl patch serviceaccount default -p \'{"imagePullSecrets": [{"name": "myregistrykey"}]}\''
-    
+        cmd: kubectl patch serviceaccount default -p "{{ json_data }}"
+
     - name: Copy ingress config
       copy:
         src: ingress.j2
