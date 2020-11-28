@@ -37,7 +37,7 @@
     - name: Log into DockerHub
       become: no
       shell:
-        cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}"
+        cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}" --docker-email=nikitasp1992@gmail.com
 
     - name: Register JSON data
       set_fact:
