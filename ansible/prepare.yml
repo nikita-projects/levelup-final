@@ -84,9 +84,9 @@
     #  shell:
     #    cmd: kubectl create deployment final --image=nikitasp1992/main:"{{BUILD_NUMBER}}"
 
-    - name: Register NODE_IP
-      set_fact:
-        node_ip: "{{ NODE_IP }}"
+    #- name: Register NODE_IP
+    #  set_fact:
+    #    node_ip: "{{ NODE_IP }}"
 
     - name: Apply configs
       become: no
