@@ -5,11 +5,11 @@ metadata:
 spec:
   selector:
     app: final
-  type: NodePort
+#  type: NodePort
   ports:
   - protocol: TCP
-    port: 8080
+    port: 80
 #    nodePort: 32000
-#    targetPort: 8080
-#  externalIPs:
-#      - {{ NODE_IP }}
+    targetPort: 8080
+  externalIPs:
+    - {{ NODE_IP }}
