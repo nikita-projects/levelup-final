@@ -98,3 +98,8 @@
       become: no
       shell:
         cmd: "kubectl apply -f /tmp/ingress.yml"
+
+    - name: Expose service
+      become: no
+      shell:
+        cmd: kubectl expose deployment final --port=8080 --type=NodePort
