@@ -9,13 +9,11 @@
 
     - name: Add Docker GPG apt Key
       apt_key:
-        #url: https://download.docker.com/linux/ubuntu/gpg
         url: https://download.docker.com/linux/debian/gpg
         state: present
 
     - name: Add Docker Repository
       apt_repository:
-        #repo: deb https://download.docker.com/linux/ubuntu xenial stable
         repo: deb [arch=amd64] https://download.docker.com/linux/debian stretch stable
         state: present
 
@@ -25,85 +23,25 @@
     - name: Install Docker Module for Python
       pip:
         name: "{{ item }}"
-      #loop: [ 'kubernetes', 'docker', 'openshift' ]
       loop: [ 'docker' ]
-    
-    #- name: Log into DockerHub
-    #  become: no
-    #  community.general.docker_login:
-    #    username: "{{DOCKERHUB_USER}}"
-    #    password: "{{DOCKERHUB_PASSWORD}}"
 
-    - name: Create secret for DockerHub
-      become: no
-      shell:
-        cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}" --docker-email=nikitasp1992@gmail.com
-      ignore_errors: yes
-
-    - name: Register JSON data
-      set_fact:
-        json_data: '{"imagePullSecrets": [{"name": "myregistrykey"}]}'
-
-    - name: Log into DockerHub
-      become: no
-      shell:
-        cmd: kubectl patch serviceaccount default -p "{{ json_data }}"
-      ignore_errors: yes
-
-    - name: Copy configs
+    - name: Copy compose file
       template:
-        #src: "{{ item }}.j2"
-        #dest: "/tmp/{{ item }}.yml"
-        src: deploy.j2
-        dest: /tmp/deploy.yml
+        src: docker-compose.j2
+        dest: /tmp/docker-compose.yml
         owner: root
         group: root
         mode: '0644'
-      #loop: [ 'ingress', 'deploy', 'service' ]
+    
+    - name: Log into DockerHub
+      community.general.docker_login:
+        username: "{{DOCKERHUB_USER}}"
+        password: "{{DOCKERHUB_PASSWORD}}"
 
-    #- name: Activate ingress
-    #  become: no
-    #  shell:
-    #    cmd: minikube addons enable ingress
+    - name: Init swarm
+      community.general.docker_swarm:
+        state: present
 
-    #- name: Run service
-    #  community.general.docker_swarm_service:
-    #    name: final
-    #    image: {{DOCKER_IMAGE}}
-    #    replicas: 1
-    #    args:
-    #      - "3600"
-
-    #- name: Create namespace final
-    #  k8s:
-    #    name: final
-    #    api_version: v1
-    #    kind: Namespace
-    #    state: present
-
-    #- name: Create deploy
-    #  become: no
-    #  shell:
-    #    cmd: kubectl create deployment final --image=nikitasp1992/main:"{{BUILD_NUMBER}}"
-
-    #- name: Register NODE_IP
-    #  set_fact:
-    #    node_ip: "{{ NODE_IP }}"
-
-    - name: Apply configs
-      become: no
+    - name: Deploy stack from a compose file
       shell:
-        #cmd: "kubectl apply -f /tmp/{{ item }}.yml"
-        cmd: "kubectl apply -f /tmp/deploy.yml"
-      #loop: [ 'deploy', 'service' ]
-      #loop: [ 'deploy' ]
-
-    #- name: Expose service
-    #  become: no
-    #  shell:
-    #    cmd: kubectl expose deployment final --port=8080 --type=NodePort
-
-    #- name: Apply ingress configs
-    #  become: no
-    #  shell:
-    #    cmd: "kubectl apply -f /tmp/ingress.yml"
+        cmd: docker stack deploy --with-registry-auth --compose-file /tmp/docker-compose.yml final
