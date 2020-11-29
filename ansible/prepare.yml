@@ -92,14 +92,15 @@
       become: no
       shell:
         cmd: "kubectl apply -f /tmp/{{ item }}.yml"
-      loop: [ 'deploy', 'service' ]
-
-    - name: Apply ingress configs
-      become: no
-      shell:
-        cmd: "kubectl apply -f /tmp/ingress.yml"
+      #loop: [ 'deploy', 'service' ]
+      loop: [ 'deploy' ]
 
     - name: Expose service
       become: no
       shell:
         cmd: kubectl expose deployment final --port=8080 --type=NodePort
+
+    - name: Apply ingress configs
+      become: no
+      shell:
+        cmd: "kubectl apply -f /tmp/ingress.yml"
