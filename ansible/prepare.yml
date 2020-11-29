@@ -34,7 +34,7 @@
     #    username: "{{DOCKERHUB_USER}}"
     #    password: "{{DOCKERHUB_PASSWORD}}"
 
-    - name: Log into DockerHub
+    - name: Create secret for DockerHub
       become: no
       shell:
         cmd: kubectl create secret docker-registry myregistrykey --docker-username="{{DOCKERHUB_USER}}" --docker-password="{{DOCKERHUB_PASSWORD}}" --docker-email=nikitasp1992@gmail.com
@@ -52,17 +52,19 @@
 
     - name: Copy configs
       template:
-        src: "{{ item }}.j2"
-        dest: "/tmp/{{ item }}.yml"
+        #src: "{{ item }}.j2"
+        #dest: "/tmp/{{ item }}.yml"
+        src: deploy.j2
+        dest: /tmp/deploy.yml
         owner: root
         group: root
         mode: '0644'
-      loop: [ 'ingress', 'deploy', 'service' ]
+      #loop: [ 'ingress', 'deploy', 'service' ]
 
-    - name: Activate ingress
-      become: no
-      shell:
-        cmd: minikube addons enable ingress
+    #- name: Activate ingress
+    #  become: no
+    #  shell:
+    #    cmd: minikube addons enable ingress
 
     #- name: Run service
     #  community.general.docker_swarm_service:
@@ -91,16 +93,17 @@
     - name: Apply configs
       become: no
       shell:
-        cmd: "kubectl apply -f /tmp/{{ item }}.yml"
+        #cmd: "kubectl apply -f /tmp/{{ item }}.yml"
+        cmd: "kubectl apply -f /tmp/deploy.yml"
       #loop: [ 'deploy', 'service' ]
-      loop: [ 'deploy' ]
+      #loop: [ 'deploy' ]
 
-    - name: Expose service
-      become: no
-      shell:
-        cmd: kubectl expose deployment final --port=8080 --type=NodePort
+    #- name: Expose service
+    #  become: no
+    #  shell:
+    #    cmd: kubectl expose deployment final --port=8080 --type=NodePort
 
-    - name: Apply ingress configs
-      become: no
-      shell:
-        cmd: "kubectl apply -f /tmp/ingress.yml"
+    #- name: Apply ingress configs
+    #  become: no
+    #  shell:
+    #    cmd: "kubectl apply -f /tmp/ingress.yml"
